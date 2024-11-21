@@ -1,4 +1,4 @@
-# The WebApp of the Peptides for Immunotherapy Database (PCI-DB)
+# The WebApp of the Peptides for Cancer Immunotherapy Database (PCI-DB)
 
 The website can be accessed under: 
 [https://pci-db.org](https://pci-db.org)
