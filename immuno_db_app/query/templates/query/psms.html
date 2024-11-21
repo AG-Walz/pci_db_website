@@ -1,0 +1,94 @@
+{% extends "query/base.html" %}
+{% load render_table from django_tables2 %}
+{% block content %}
+
+    {% load static %}
+
+    <div id="main" class="wrapper style2">
+        <div class="title">Browse Database</div>
+            <div class="psms_container">
+                <div class="row" id="row_content">
+                    <div class="col-md-3">
+                            {% if filter %}
+                                <form id="myForm" action="" method="get">
+                                    <div class="form-group">
+                                        <label for="database_selector">Database</label>
+                                        <select id="database_selector" name="database" class="form-control">
+                                            <option value="DB_release_240822_default" {% if request.GET.database == 'DB_release_240822_default' %}selected{% endif %}>DB_release_240822_default</option>
+                                            <option value="DB_release_240822_isoforms" {% if request.GET.database == 'DB_release_240822_isoforms' %}selected{% endif %}>DB_release_240822_isoforms</option>
+                                            <option value="DB_release_240822_mutations" {% if request.GET.database == 'DB_release_240822_mutations' %}selected{% endif %}>DB_release_240822_mutations</option>
+                                            <!-- Add other databases as needed -->
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{ filter.form.sequence.id_for_label }}">Peptide Sequence</label>
+                                        {{ filter.form.sequence }}
+                                    </div>
+                                    <div class="form-group">
+                                        <span>Substring Search {{ filter.form.substring_search }}</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{ filter.form.mhc_class.id_for_label }}">MHC Class</label>
+                                        {{ filter.form.mhc_class }}
+                                    </div>
+                                     <div class="form-group">
+                                        <label for="{{ filter.form.disease.id_for_label }}">Disease</label>
+                                        {{ filter.form.disease }}
+                                    </div>
+                                     <div class="form-group">
+                                        <label for="{{ filter.form.biological_material.id_for_label }}">Tissue</label>
+                                        {{ filter.form.biological_material }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{ filter.form.modifications.id_for_label }}">Peptide modifications</label>
+                                        {{ filter.form.modifications }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{ filter.form.uniprot.id_for_label }}">Uniprot ID</label>
+                                        {{ filter.form.uniprot }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{ filter.form.dignity.id_for_label }}">Dignity</label>
+                                        {{ filter.form.dignity }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{ filter.form.best_hla_allele.id_for_label }}">Best binding HLA Allele</label>
+                                        {{ filter.form.best_hla_allele }}
+                                    </div>
+                                    <div class="form-group">
+                                        <span>only include binders {{ filter.form.only_include_binders }}</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <span>include cell lines {{ filter.form.include_cell_lines }}</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{ show_more_form.show_more_sample_infos.id_for_label }}">Show more sample infos {{ show_more_form.show_more_sample_infos }}</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{ show_more_form.show_more_donor_infos.id_for_label }}">Show more donor infos {{ show_more_form.show_more_donor_infos }}</label>
+                                    </div>
+                                    <!--{{ count_form.as_p }}-->
+                                    <br>
+                                    <div class="center-buttons">
+                                      <button type="submit" class="btn btn-primary custom-btn">Apply Filters</button>
+                                    </div>
+
+                            </form>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-9" id="psm_table">
+                        {% render_table table %}
+                    </div>
+                </div>
+                <div style="text-align: center;">{{ query_count }}</div>
+            </div>
+    </div>
+
+<script src="{% static 'query/js/dropdown_psms.js' %}"></script>
+<script>
+    document.getElementById("database_selector").addEventListener("change", function() {
+        document.getElementById("myForm").submit();  // Automatically submit the form when the database is selected
+    });
+</script>
+
+{% endblock %}

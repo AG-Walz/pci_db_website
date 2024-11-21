@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:14.5
+    shm_size: 1gb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+      - ./data/transfer:/var/lib/transfer
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  web:
+    build: ./immuno_db_app
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./immuno_db_app/:/usr/src/immuno_db_app/
+      - ./data/spectra:/var/lib/spectra
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db

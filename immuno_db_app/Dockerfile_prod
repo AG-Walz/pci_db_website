@@ -1,0 +1,68 @@
+###########
+# BUILDER #
+###########
+
+# pull official base image
+FROM python:3.10.5 as builder
+
+# set work directory
+WORKDIR /usr/src/immuno_db_app
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# install dependencies
+COPY ./requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/immuno_db_app/wheels -r requirements.txt
+
+
+#########
+# FINAL #
+#########
+
+# pull official base image
+FROM python:3.10.5
+
+# create directory for the app user
+RUN mkdir -p /home/immuno_db_app
+
+# create the app user
+RUN groupadd immuno_db_app && useradd -g immuno_db_app immuno_db_app
+
+# create the appropriate directories
+ENV HOME=/home/immuno_db_app
+ENV APP_HOME=/home/immuno_db_app/web
+RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/static
+WORKDIR $APP_HOME
+
+# install dependencies
+RUN apt-get update && apt-get install -y libpq-dev
+COPY --from=builder /usr/src/immuno_db_app/wheels /wheels
+COPY --from=builder /usr/src/immuno_db_app/requirements.txt .
+RUN pip install --no-cache /wheels/*
+
+# Install net-tools
+RUN apt-get update \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    netcat \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# copy entrypoint.prod.sh
+COPY ./entrypoint.sh .
+RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh
+RUN chmod +x  $APP_HOME/entrypoint.sh
+
+# copy project
+COPY . $APP_HOME
+
+# chown all the files to the app user
+RUN chown -R immuno_db_app:immuno_db_app $APP_HOME
+
+# change to the app user
+USER immuno_db_app
+
+# run entrypoint.prod.sh
+ENTRYPOINT ["/home/immuno_db_app/web/entrypoint.sh"]

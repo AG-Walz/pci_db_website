@@ -1,0 +1,55 @@
+{% extends "query/base.html" %}
+{% block content %}
+<div class="container">
+    <br>
+    <table class="table table-striped">
+        <tr>
+            <td>Database version</td>
+            <td>{{ database_name }}</td>
+        </tr>
+        <tr>
+            <td>Peptide Sequence</td>
+            <td>{{ psm.peptide_sequence }}</td>
+        </tr>
+        <tr>
+            <td>Peptide Modifications</td>
+            <td>{{ psm.peptide_modifications }}</td>
+        </tr>
+        <tr>
+            <td>Mass spectrometer</td>
+            <td>{{ mass_spectrometer_name }}</td>
+        </tr>
+        <tr>
+            <td>Spectrum reference</td>
+            <td>{{ psm.spectrum_reference }}</td>
+        </tr>
+        <tr>
+            <td>Charge</td>
+            <td>{{ psm.charge }}</td>
+        </tr>
+        <tr>
+            <td>XCorr</td>
+            <td>{{ psm.x_corr }}</td>
+        </tr>
+        <tr>
+            <td>q-value</td>
+            <td>{{ psm.q_value }}</td>
+        </tr>
+        <tr>
+            <td>matched ions</td>
+            <td>{{ psm.matched_ions }}</td>
+        </tr>
+        <tr>
+            <td>total ions</td>
+            <td>{{ psm.total_ions }}</td>
+        </tr>
+
+    </table>
+</div>
+
+<div style="display: flex; justify-content: center; align-items: center;">
+    <img src="data:image/png;base64,{{ graphic|safe }}">
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,51 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:14.5
+    shm_size: 1gb
+    user: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+      - ./data/transfer:/var/lib/transfer
+    env_file:
+      - ./.env.prod.db
+  web:
+    build:
+      context: ./immuno_db_app
+      dockerfile: Dockerfile_prod
+    command: gunicorn immuno_db_app.wsgi --bind 0.0.0.0:8000
+    volumes:
+      - static_volume:/home/immuno_db_app/web/static
+      - ./data/spectra:/var/lib/spectra
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db
+  nginx:
+    build: ./nginx
+    restart: unless-stopped
+    volumes:
+      - static_volume:/home/immuno_db_app/web/static
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  certbot:
+    image: certbot/certbot:v1.31.0
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+volumes:
+  static_volume:
+

@@ -1,0 +1,22 @@
+{% extends "query/base.html" %}
+{% load render_table from django_tables2 %}
+{% block content %}
+
+    {% load static %}
+
+    <div id="main" class="wrapper style2">
+        <div class="title">Database Overview</div>
+        <div class="plot-container">
+            <div id="figure_diverging_chart" style="margin-bottom: 50px;"></div>
+            <div id="tooltip"></div>
+        </div>
+        <div class="plot-container">
+            <div id="my_dataviz"></div>
+        </div>
+    </div>
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="{% static 'query/js/diverging_chart.js' %}"></script>
+<script src="{% static 'query/js/stacked_bar_chart_tissues.js' %}"></script>
+{% endblock %}

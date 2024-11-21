@@ -1,0 +1,111 @@
+{% extends "query/base.html" %}
+{% block content %}
+    <div class="container">
+        <h2>Download overview</h2>
+        <h5>Query filters</h5>
+        <br>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+              <th scope="col">Field</th>
+              <th scope="col">Filter value</th>
+            </tr>
+          </thead>
+          <tr>
+            <td>Database name</td>
+            <td>{{ database_name }}</td>
+          </tr>
+          <tr>
+            <td>Peptide Sequence</td>
+            <td>{{ peptide_sequence }}</td>
+          </tr>
+          <tr>
+            <td>Substring search</td>
+            <td>{{ substring_search }}</td>
+          </tr>
+          <tr>
+            <td>MHC class</td>
+            <td>{{ mhc_class }}</td>
+          </tr>
+          <tr>
+            <td>peptide_modifications</td>
+            <td>{{ peptide_modifications }}</td>
+          </tr>
+          <tr>
+            <td>Uniprot ID</td>
+            <td>{{ uniprot }}</td>
+          </tr>
+          <tr>
+            <td>Disease</td>
+            <td>{{ disease }}</td>
+          </tr>
+          <tr>
+            <td>Biological material</td>
+            <td>{{ biological_material }}</td>
+          </tr>
+          <tr>
+            <td>Dignity</td>
+            <td>{{ dignity }}</td>
+          </tr>
+          <tr>
+            <td>Min. peptide length</td>
+            <td>{{ peptide_length_min }}</td>
+          </tr>
+          <tr>
+            <td>Max. peptide length</td>
+            <td>{{ peptide_length_max }}</td>
+          </tr>
+          <tr>
+            <td>Project Code</td>
+            <td>{{ project_code }}</td>
+          </tr>
+          <tr>
+            <td>Donor Code</td>
+            <td>{{ donor_code }}</td>
+          </tr>
+          <tr>
+            <td>Include cell lines</td>
+            <td>{{ include_cell_lines }}</td>
+          </tr>
+        </table>
+
+        <br>
+        <h5>Number of rows</h5>
+        Your query yields <b>{{ row_count }} rows</b>.
+        <br>
+        <br>
+        {% if show_warning %}
+        <div class="alert">
+          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+          <strong>Warning!</strong> {{ row_warning }}
+        </div>
+        {% endif %}
+        <br>
+
+
+        <form id="download-form" method="post" action="{% url 'download' %}" onSubmit="disableButtonAndShowMessage()">
+            {% csrf_token %}
+            {% for key, value in request.GET.items %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+            {% endfor %}
+
+            <button type="submit" name="action" value="download_csv" class="btn btn-primary">Download CSV</button>
+            <button type="submit" name="action" value="alternative_action" class="btn btn-primary">Download XLSX</button>
+        </form>
+
+        <script>
+        function disableButtonAndShowMessage() {
+            // Delay the execution of button disabling
+            setTimeout(function() {
+                var buttons = document.querySelectorAll('#download-form button[type="submit"]');
+                // Disable each button and change the text
+                buttons.forEach(function(button) {
+                    button.disabled = true; // Disable the button
+                    button.innerHTML = 'Downloading...'; // Change text for all buttons
+                });
+            }, 10); // Delay of 10 milliseconds to prevent to allow for the action to be submitted as well
+        }
+        </script>
+    </div>
+
+{% endblock %}
