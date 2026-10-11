@@ -450,3 +450,18 @@ form input[type="text"], form input[type="email"], form input[type="password"], 
   width: 60%;
   height: auto;
 }
+
+.js-plotly-plot svg {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .js-plotly-plot .modebar .modebar-btn {
+    font-size: 11px;
+    padding: 2px 3px;
+    height: 16px;
+  }
+}
