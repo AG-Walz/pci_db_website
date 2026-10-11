@@ -36,6 +36,7 @@
 								<li class="current"><a href={% url 'home' %}>Home</a></li>
 								<li><a href={% url 'psms' %}>Browse Database</a></li>
 								<li><a href={% url 'overview' %}>Database Overview</a></li>
+								<li><a href={% url 'protein_search' %}>Protein Search</a></li>
 								 {% if user.is_authenticated %}
                                     <li>
                                         <a href="#" onclick="$('#signOutBtn').click()">Logout</a>
