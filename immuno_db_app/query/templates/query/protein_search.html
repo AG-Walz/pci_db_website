@@ -1,0 +1,102 @@
+{% extends "query/base.html" %}
+{% block content %}
+
+    <div id="main" class="wrapper style2">
+        <div class="title">Protein Search</div>
+        <div class="container">
+            <p class="text-muted mb-4">Search by UniProt ID or protein name, then click a suggestion to open the protein.</p>
+            <div class="form-group mb-4">
+                <label for="database_selector"><b>Database version</b></label>
+                <select id="database_selector" class="form-control">
+                    <option value="DB_release_260407_default">DB_release_260407_default</option>
+                    <option value="DB_release_240822_default">DB_release_240822_default</option>
+                </select>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="form-group position-relative">
+                <label for="uniprot_query"><b>UniProt ID</b></label>
+                <input id="uniprot_query" class="form-control protein-query" autocomplete="off"
+                       placeholder="e.g. P21802" data-field="uniprot_code">
+                <div class="list-group position-absolute w-100 protein-suggestions" style="z-index: 1000;"></div>
+            </div>
+            or
+            <div class="form-group position-relative">
+                <label for="name_query"><b>Protein name</b></label>
+                <input id="name_query" class="form-control protein-query" autocomplete="off"
+                       placeholder="e.g. fibroblast growth" data-field="protein_name">
+                <div class="list-group position-absolute w-100 protein-suggestions" style="z-index: 1000;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const url = "{% url 'protein_autocomplete' %}";
+            const database = document.getElementById('database_selector');
+            const queries = document.querySelectorAll('.protein-query');
+
+            function setupAutocomplete(input, suggestions) {
+                let timer = null;
+                let requestId = 0;
+
+                function showSuggestions(results) {
+                    suggestions.replaceChildren();
+                    if (results.length === 0) {
+                        const empty = document.createElement('div');
+                        empty.className = 'list-group-item text-muted';
+                        empty.textContent = 'No proteins found';
+                        suggestions.appendChild(empty);
+                        return;
+                    }
+                    results.forEach(function (protein) {
+                        const item = document.createElement('a');
+                        item.className = 'list-group-item list-group-item-action';
+                        item.href = protein.url;
+                        item.textContent = protein.uniprot_code + ' – ' + protein.protein_name;
+                        suggestions.appendChild(item);
+                    });
+                }
+
+                input.addEventListener('input', function () {
+                    queries.forEach(function (other) {
+                        if (other !== input) {
+                            other.value = '';
+                            other.parentElement.querySelector('.protein-suggestions').replaceChildren();
+                        }
+                    });
+                    clearTimeout(timer);
+                    const term = input.value.trim();
+                    if (term.length < 2) {
+                        requestId++;
+                        suggestions.replaceChildren();
+                        return;
+                    }
+                    timer = setTimeout(function () {
+                        const thisRequest = ++requestId;
+                        const params = new URLSearchParams({q: term, field: input.dataset.field, database: database.value});
+                        fetch(url + '?' + params)
+                            .then(function (response) { return response.json(); })
+                            .then(function (data) {
+                                if (thisRequest === requestId) showSuggestions(data.results);
+                            });
+                    }, 250);
+                });
+
+                input.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape') suggestions.replaceChildren();
+                });
+            }
+
+            queries.forEach(function (input) {
+                setupAutocomplete(input, input.parentElement.querySelector('.protein-suggestions'));
+            });
+
+            database.addEventListener('change', function () {
+                queries.forEach(function (input) { input.value = ''; });
+                document.querySelectorAll('.protein-suggestions').forEach(function (s) { s.replaceChildren(); });
+            });
+        })();
+    </script>
+{% endblock %}

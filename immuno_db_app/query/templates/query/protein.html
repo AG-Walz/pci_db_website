@@ -1,0 +1,44 @@
+{% extends "query/base.html" %}
+{% block content %}
+{# not .container: style.css and the html5up theme redefine it #}
+<div style="max-width: 1800px; margin: 0 auto; padding: 0 1.5rem;">
+    <div>
+        <h4>{{ protein_name|default:uniprot_code }} ({{ uniprot_code }})</h4>
+
+        {% if sibling_proteins|length > 1 %}
+            <p>
+                <label for="protein_select">Peptide maps to
+                    {{ sibling_proteins|length }} proteins:</label>
+                <select id="protein_select"
+                        onchange="if (this.value) window.location.href = this.value;">
+                    {% for protein in sibling_proteins %}
+                        <option value="{{ protein.url }}"{% if protein.is_current %} selected{% endif %}>
+                            {{ protein.name|default:protein.accession }} ({{ protein.accession }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </p>
+        {% endif %}
+    </div>
+
+    {% if protein_plot %}
+        <div>
+            <div>
+                {% if peptide_spans %}
+                    <p>Peptide <strong>{{ highlighted_peptide }}</strong> highlighted at
+                    {% for start, end in peptide_spans %}{{ start }}&ndash;{{ end }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+                {% elif highlighted_peptide %}
+                    <p>Peptide <strong>{{ highlighted_peptide }}</strong> was not found in this protein sequence.</p>
+                {% endif %}
+                {{ protein_plot|safe }}
+            </div>
+
+        </div>
+    {% else %}
+        <div>
+            <p>No coverage plot stored yet for this protein in the selected database version.</p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

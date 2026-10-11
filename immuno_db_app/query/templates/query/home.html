@@ -5,8 +5,11 @@
     <section id="main" class="wrapper style2">
         <section id="main" class="wrapper style0">
             <div class="title">Overview image</div>
-            <div class="container" style="max-width: 80%; text-align: center;">
+            <div class="container" style="max-width: 80%; position: relative; text-align: center;">
                 {% include 'query/figure_1a.html' %}
+                <div class="reference-number" style="position: absolute; bottom: 5px; right: 5px;">
+                    <a href="#reference-info" style="text-decoration: none; color: inherit;">[1]</a>
+                </div>
             </div>
         </section>
         <div class="container">
@@ -17,7 +20,7 @@
         <div class="container">
             <!-- Image -->
                 <a href="#" class="image featured">
-                    <img src="images/pic01.jpg" alt="" />
+                    <img src="{% static 'images/pic01.jpg' %}" alt="" />
                 </a>
             <!-- Features -->
                 <section id="features">
@@ -72,4 +75,10 @@
                 </section>
         </div>
     </section>
+    <div id="reference-info" style="text-align: center; margin-top: 20px;">
+        [1] Created in BioRender. Walz, J. (2025) 
+        <a href="https://BioRender.com/s01w949" target="_blank" style="text-decoration: underline; color: blue;">
+            https://BioRender.com/s01w949
+        </a>
+    </div>
 {% endblock %}

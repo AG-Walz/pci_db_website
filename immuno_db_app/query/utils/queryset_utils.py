@@ -173,12 +173,13 @@ def generate_filtered_query(request, database_name):
     treatment = 'ms_run_code__sample_code__treatment'
     donor_code = 'ms_run_code__sample_code__donor_code__donor_code'
     donor_hla_types = 'ms_run_code__sample_code__donor_code__all_hla_alleles_donor'
+    donor_hla_types_immunotype = 'ms_run_code__sample_code__donor_code__donorhlaimmunotypeview__all_hla_alleles_donor_immunotype'
     project_code = 'ms_run_code__sample_code__project_code__qbic_project_code'
     peptide_length = 'peptide_length'
 
     cols_for_query = [psm_code, peptide_sequence, proteins, peptide_modifications, mhc_class, filename,
                       biological_material, disease_name, dignity, is_metastasis, is_cell_line, treatment, donor_code,
-                      donor_hla_types, project_code, peptide_length]
+                      donor_hla_types, donor_hla_types_immunotype, project_code, peptide_length]
 
     queryset = PeptideSpectrumMatchesMatView.objects.using(database_name).all().values(*cols_for_query).order_by(
         'psm_code').filter(**filter_dict)

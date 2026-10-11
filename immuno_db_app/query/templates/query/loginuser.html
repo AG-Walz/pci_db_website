@@ -15,6 +15,7 @@
                 {% endif %}
                 <form method="POST">
                     {% csrf_token %}
+                    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
                     <div class="form-group">
                         <label for="username">Username</label>
                         <input type="text" name="username" class="form-control" id="username">
@@ -27,7 +28,7 @@
                 </form>
                 <hr>
                 <div class="text-center">
-                    Need an account? <a href="{% url 'signupuser' %}">Sign Up here</a>
+                    <b>Currently, the protein viewer of the PCI-DB is only accessible to predefined reviewer accounts.</b>
                 </div>
             </div>
         </div>
