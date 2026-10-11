@@ -14,6 +14,7 @@
                                     <div class="form-group">
                                         <label for="database_selector">Database</label>
                                         <select id="database_selector" name="database" class="form-control">
+                                            <option value="DB_release_260407_default" {% if request.GET.database == 'DB_release_260407_default' %}selected{% endif %}>DB_release_260407_default</option>
                                             <option value="DB_release_240822_default" {% if request.GET.database == 'DB_release_240822_default' %}selected{% endif %}>DB_release_240822_default</option>
                                             <option value="DB_release_240822_isoforms" {% if request.GET.database == 'DB_release_240822_isoforms' %}selected{% endif %}>DB_release_240822_isoforms</option>
                                             <option value="DB_release_240822_mutations" {% if request.GET.database == 'DB_release_240822_mutations' %}selected{% endif %}>DB_release_240822_mutations</option>
