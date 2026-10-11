@@ -78,32 +78,6 @@ class AuthUserUserPermissions(models.Model):
         unique_together = (('user', 'permission'),)
 
 
-class BindingPredictions(models.Model):
-    binding_prediction_code = models.BigIntegerField(primary_key=True)
-    psm_code = models.ForeignKey('PeptideSpectrumMatches', models.DO_NOTHING, db_column='psm_code', blank=True, null=True)
-    hla_code = models.IntegerField(blank=True, null=True)
-    prediction_tool = models.TextField(blank=True, null=True)
-    prediction_tool_version = models.TextField(blank=True, null=True)
-    is_binder = models.BooleanField(blank=True, null=True)
-    affinity_score = models.FloatField(blank=True, null=True)
-    affinity_rank = models.FloatField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'binding_predictions'
-
-
-class BlogBlogposts(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    title = models.CharField(max_length=100)
-    description = models.CharField(max_length=250)
-    url = models.CharField(max_length=200)
-
-    class Meta:
-        managed = False
-        db_table = 'blog_blogposts'
-
-
 class DataProcessing(models.Model):
     data_processing_run_code = models.IntegerField(primary_key=True)
     person_data_processing = models.IntegerField(blank=True, null=True)
@@ -255,6 +229,16 @@ class DonorHla(models.Model):
         db_table = 'donor_hla'
 
 
+class DonorHlaImmunotype(models.Model):
+    donor_hla_immunotype_code = models.IntegerField(primary_key=True)
+    donor_code = models.ForeignKey('Donors', models.DO_NOTHING, db_column='donor_code', blank=True, null=True)
+    hla_code = models.ForeignKey('HlaTypes', models.DO_NOTHING, db_column='hla_code', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'donor_hla_immunotype'
+
+
 class DonorHlaView(models.Model):
     donor_code = models.TextField(primary_key=True)
     all_hla_alleles_donor = models.TextField(blank=True, null=True)
@@ -263,6 +247,16 @@ class DonorHlaView(models.Model):
     class Meta:
         managed = False  # Created from a view. Don't remove.
         db_table = 'donor_hla_view'
+
+
+class DonorHlaImmunotypeView(models.Model):
+    donor_code = models.OneToOneField('DonorHlaView', models.DO_NOTHING, primary_key=True, db_column='donor_code')
+    all_hla_alleles_donor_immunotype = models.TextField(blank=True, null=True)
+    ncbi_taxonomy_code = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False  # Created from a view. Don't remove.
+        db_table = 'donor_hla_immunotype_view'
 
 
 class MassSpectrometers(models.Model):
@@ -332,20 +326,20 @@ class PeptideSpectrumMatches(models.Model):
     mass_to_charge = models.FloatField(blank=True, null=True)
     q_value = models.FloatField(blank=True, null=True)
     charge = models.SmallIntegerField(blank=True, null=True)
-    search_identifier = models.TextField(blank=True, null=True)
+    #search_identifier = models.TextField(blank=True, null=True)
     spectrum_reference = models.TextField(blank=True, null=True)
-    ion_frac = models.FloatField(blank=True, null=True)
+    #ion_frac = models.FloatField(blank=True, null=True)
     delt_cn = models.FloatField(blank=True, null=True)
     delt_lcn = models.FloatField(blank=True, null=True)
-    percolator_score = models.FloatField(blank=True, null=True)
-    pep = models.FloatField(blank=True, null=True)
+    #percolator_score = models.FloatField(blank=True, null=True)
+    #pep = models.FloatField(blank=True, null=True)
     x_corr = models.FloatField(blank=True, null=True)
-    sp_score = models.FloatField(blank=True, null=True)
-    sp_rank = models.FloatField(blank=True, null=True)
-    expectation_value = models.FloatField(blank=True, null=True)
+    #sp_score = models.FloatField(blank=True, null=True)
+    #sp_rank = models.FloatField(blank=True, null=True)
+    #expectation_value = models.FloatField(blank=True, null=True)
     matched_ions = models.SmallIntegerField(blank=True, null=True)
     total_ions = models.SmallIntegerField(blank=True, null=True)
-    num_matched_peptides = models.IntegerField(blank=True, null=True)
+    #num_matched_peptides = models.IntegerField(blank=True, null=True)
     peptide_mass = models.FloatField(blank=True, null=True)
     is_best_spectrum = models.BooleanField(blank=True, null=True)
 
@@ -365,20 +359,20 @@ class PeptideSpectrumMatchesMatView(models.Model):
     mass_to_charge = models.FloatField(blank=True, null=True)
     q_value = models.FloatField(blank=True, null=True)
     charge = models.SmallIntegerField(blank=True, null=True)
-    search_identifier = models.TextField(blank=True, null=True)
+    #search_identifier = models.TextField(blank=True, null=True)
     spectrum_reference = models.TextField(blank=True, null=True)
-    ion_frac = models.FloatField(blank=True, null=True)
+    #ion_frac = models.FloatField(blank=True, null=True)
     delt_cn = models.FloatField(blank=True, null=True)
     delt_lcn = models.FloatField(blank=True, null=True)
-    percolator_score = models.FloatField(blank=True, null=True)
-    pep = models.FloatField(blank=True, null=True)
+    #percolator_score = models.FloatField(blank=True, null=True)
+    #pep = models.FloatField(blank=True, null=True)
     x_corr = models.FloatField(blank=True, null=True)
-    sp_score = models.FloatField(blank=True, null=True)
-    sp_rank = models.FloatField(blank=True, null=True)
-    expectation_value = models.FloatField(blank=True, null=True)
+    #sp_score = models.FloatField(blank=True, null=True)
+    #sp_rank = models.FloatField(blank=True, null=True)
+    #expectation_value = models.FloatField(blank=True, null=True)
     matched_ions = models.IntegerField(blank=True, null=True)
     total_ions = models.IntegerField(blank=True, null=True)
-    num_matched_peptides = models.IntegerField(blank=True, null=True)
+    #num_matched_peptides = models.IntegerField(blank=True, null=True)
     peptide_mass = models.FloatField(blank=True, null=True)
     is_best_spectrum = models.BooleanField(blank=True, null=True)
     peptide_modifications = models.TextField(blank=True, null=True)
@@ -392,6 +386,21 @@ class PeptideSpectrumMatchesMatView(models.Model):
     class Meta:
         managed = False  # Created from a view. Don't remove.
         db_table = 'peptide_spectrum_matches_mat_view'
+
+
+    def proteins_by_name(self):
+        """(accession, protein name) pairs of this PSM, sorted by protein name.
+
+        Both columns are pipe-separated and aligned in the view, so this needs
+        no extra query. The stored order is not meaningful -- the same peptide
+        shows up as both 'O60674|P23458' and 'P23458|O60674' -- hence sorting.
+        """
+        accessions = self.uniprot_ids.split('|') if self.uniprot_ids else []
+        names = self.protein_names.split('|') if self.protein_names else []
+        if len(names) != len(accessions):  # never seen, but don't lose the ids over it
+            names = [''] * len(accessions)
+        pairs = [(a, n.strip()) for a, n in zip(accessions, names)]
+        return sorted(pairs, key=lambda pair: (pair[1].lower(), pair[0]))
 
 
 class PeptideProteinMatches(models.Model):
@@ -475,3 +484,12 @@ class Spectra(models.Model):
     class Meta:
         managed = False
         db_table = 'spectra'
+
+
+class ProteinPlots(models.Model):
+    uniprot_code = models.TextField(primary_key=True)
+    figure_json_gz_b64 = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'protein_plots'
