@@ -11,7 +11,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Auth
-    path('signup/', views.signupuser, name='signupuser'),
+    #path('signup/', views.signupuser, name='signupuser'),
     path('login/', views.loginuser, name='loginuser'),
     path('logout/', views.logoutuser, name='logoutuser'),
 
@@ -22,4 +22,7 @@ urlpatterns = [
     path('overview/', views.overview, name='overview'),
     path('legal_notice/', views.legal_notice, name='legal_notice'),
     path('privacy_policy/', views.privacy_policy, name='privacy_policy'),
+    path('protein/<str:uniprot_code>/', views.protein_detail, name='protein'),
+    path('protein_search/', views.protein_search, name='protein_search'),
+    path('protein_search/autocomplete/', views.protein_autocomplete, name='protein_autocomplete'),
 ]
