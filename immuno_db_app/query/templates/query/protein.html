@@ -24,6 +24,15 @@
     {% if protein_plot %}
         <div>
             <div>
+                <form method="get" class="d-flex gap-2 mb-3" style="max-width: 500px;">
+                    <input type="hidden" name="database" value="{{ database_name }}">
+                    <input name="peptide" class="form-control" placeholder="Peptide sequence, e.g. SYFPEITHI"
+                           value="{{ highlighted_peptide|default:'' }}" autocomplete="off">
+                    {# undo the html5up theme's 4em-tall uppercase button #}
+                    <button type="submit" class="btn btn-primary flex-shrink-0"
+                            style="height: auto; line-height: 1.5; min-width: 0; letter-spacing: normal; text-transform: none;
+                                   display: inline-flex; align-items: center; justify-content: center; white-space: nowrap;">Highlight peptide</button>
+                </form>
                 {% if peptide_spans %}
                     <p>Peptide <strong>{{ highlighted_peptide }}</strong> highlighted at
                     {% for start, end in peptide_spans %}{{ start }}&ndash;{{ end }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>

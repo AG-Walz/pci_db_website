@@ -241,7 +241,8 @@ def protein_detail(request, uniprot_code):
     database_name = map_db_name(database)
 
     psm_code = request.GET.get('psm')
-    peptide = request.GET.get('peptide')
+    # sequences are stored upper case and matched exactly
+    peptide = (request.GET.get('peptide') or '').strip().upper() or None
     sibling_proteins = []
 
     if psm_code:
